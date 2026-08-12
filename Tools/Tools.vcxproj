@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="GameWindows.h" />
+    <ClInclude Include="ShadersSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
