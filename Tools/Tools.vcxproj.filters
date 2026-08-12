@@ -23,5 +23,8 @@
     <ClInclude Include="GameWindows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
