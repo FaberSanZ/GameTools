@@ -1,17 +1,26 @@
-// Tools.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+
 #include "GameWindows.h"
 #include "GameTime.h"
+#include "GameLogger.h"
 
 int main()
 {
-	GameWindows gameWindow/*(800, 600, "Game Window")*/;
-    gameWindow.OnInitialize();
-	gameWindow.SetWindowTitle(L"Game Window");
-	gameWindow.SetWindowSize(800, 600);
+    GameLogger::Config loggerConfig;
+    loggerConfig.writeToConsole = true;
+    loggerConfig.writeToDebugger = true;
+    loggerConfig.writeToFile = true;
+    loggerConfig.filePath = "GameTools.log";
+    loggerConfig.minimumLevel = GameLogLevel::Trace;
 
+    GameLogger::Initialize(loggerConfig);
+
+    GAME_LOG_INFO("GameTools initialized.");
+
+    GameWindows gameWindow;
+    gameWindow.OnInitialize();
+    gameWindow.SetWindowTitle(L"Game Window");
+    gameWindow.SetWindowSize(800, 600);
 
     GameTime::Config config;
     config.fixedDeltaTime = 1.0 / 60.0;
@@ -20,33 +29,36 @@ int main()
     config.timeScale = 1.0;
     config.clearPhysicsAccumulatorOnReset = true;
 
-    GameTime gameTime;
-    gameTime.Reset();
-    gameTime.SetConfig(config);
+    GameTime gameTime(config);
 
-    GameInput::AddKeyCallback([](GameInput::KeyCode key, GameInput::KeyState state)
+    GameInput::AddKeyCallback(
+        [](GameInput::KeyCode key, GameInput::KeyState state)
         {
-            if (key == GameInput::KeyCode::A && state == GameInput::KeyState::Pressed)
+            if (key == GameInput::KeyCode::A &&
+                state == GameInput::KeyState::Pressed)
             {
-                std::cout << "A key pressed." << std::endl;
+                GAME_LOG_DEBUG("A key pressed.");
             }
         });
 
     while (gameWindow.IsRunning())
     {
-		GameInput::Update();
+        gameWindow.PumpMessages();
+
         gameTime.OnUpdate();
 
         while (gameTime.UpdatePhysics())
         {
-   //         const double fixedDt = gameTime.FixedDeltaTime();
-			//std::cout << "Physics update with fixed delta time: " << fixedDt << " seconds." << std::endl;
+            const double fixedDt = gameTime.FixedDeltaTime();
+            // PhysicsStep(fixedDt);
         }
 
-
-        gameWindow.PumpMessages();
+        // Update(gameTime.DeltaTime());
+        // Render();
     }
-	return 0;
-}
 
+    GameLogger::Shutdown();
+
+    return 0;
+}
 

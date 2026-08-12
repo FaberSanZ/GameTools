@@ -10,7 +10,7 @@
 
 static void AppendShaderLog(const std::string& line)
 {
-	const std::filesystem::path logPath = std::filesystem::temp_directory_path() / "vultaik_dxr.log";
+	const std::filesystem::path logPath = std::filesystem::temp_directory_path() / "gametools_shader.log";
 	std::ofstream out(logPath, std::ios::app);
 	if (out.is_open())
 		out << line << '\n';
